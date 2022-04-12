@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CurrencyExchangeApiApplication {
 
 	// komentarz dla Kasi
+	// komentarz dla Wojtka
 	public static void main(String[] args) {
 		SpringApplication.run(CurrencyExchangeApiApplication.class, args);
 	}
