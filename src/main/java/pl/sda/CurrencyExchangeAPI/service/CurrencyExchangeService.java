@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.sda.CurrencyExchangeAPI.dto.CurrencyRateDto;
 import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
+import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.repository.CurrencyRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class CurrencyExchangeService {
@@ -27,7 +29,12 @@ public class CurrencyExchangeService {
     public CurrencyRateDto getLatestCurrencyRate(String base, String target) {
 
         //get currency to process from api
-        CurrencyRate currencyRate = exchangerateReader.getLatestRates(base, target);
+        RateValue rateValue = exchangerateReader.getLatestRates(base, target);
+        CurrencyRate currencyRate = new CurrencyRate();
+        currencyRate.setBase(base);
+        currencyRate.setTarget(target);
+        currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
+        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         //save currency to db
         currencyRepository.save(currencyRate);
         //map currency to currencyDto
@@ -40,7 +47,12 @@ public class CurrencyExchangeService {
     public CurrencyRateDto getOldCurrencyRate(String base, String target, LocalDateTime date) {
 
         //get old currency to process from api
-        CurrencyRate currencyRate = exchangerateReader.getHistoryRates(base, target, date);
+        RateValue rateValue = exchangerateReader.getHistoryRates(base, target, date);
+        CurrencyRate currencyRate = new CurrencyRate();
+        currencyRate.setBase(base);
+        currencyRate.setTarget(target);
+        currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
+        currencyRate.setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         //save currency to db
         currencyRepository.save(currencyRate);
         //map currency to currencyDto

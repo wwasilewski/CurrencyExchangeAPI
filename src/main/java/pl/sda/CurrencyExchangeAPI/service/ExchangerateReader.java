@@ -3,7 +3,7 @@ package pl.sda.CurrencyExchangeAPI.service;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
+import pl.sda.CurrencyExchangeAPI.model.RateValue;
 
 import java.io.IOException;
 import java.net.URI;
@@ -22,11 +22,12 @@ public class ExchangerateReader {
         return "https://api.exchangerate.host/latest?base=" + base + "&symbols=" + symbol;
     }
 
+    //date format YYYY-MM-DD
     public String createAPICallForHistoryRate(String base, String symbol, LocalDateTime date) {
         return "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + symbol;
     }
 
-    public CurrencyRate getLatestRates(String base, String symbol) {
+    public RateValue getLatestRates(String base, String symbol) {
         URI uri = null;
         try {
             uri = new URI(createAPICallForLatestRate(base, symbol));
@@ -47,10 +48,10 @@ public class ExchangerateReader {
         }
         Gson mapper = new Gson();
 
-        return mapper.fromJson(response.body(), CurrencyRate.class);
+        return mapper.fromJson(response.body(), RateValue.class);
     }
 
-    public CurrencyRate getHistoryRates(String base, String symbol, LocalDateTime date) {
+    public RateValue getHistoryRates(String base, String symbol, LocalDateTime date) {
         URI uri = null;
         try {
             uri = new URI(createAPICallForHistoryRate(base, symbol, date));
@@ -71,6 +72,6 @@ public class ExchangerateReader {
         }
         Gson mapper = new Gson();
 
-        return mapper.fromJson(response.body(), CurrencyRate.class);
+        return mapper.fromJson(response.body(), RateValue.class);
     }
 }
