@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -24,7 +22,7 @@ public class ExchangerateReader {
     }
 
     //date format YYYY-MM-DD
-    public String createAPICallForHistoryRate(String base, String symbol, LocalDateTime date) {
+    public String createAPICallForHistoryRate(String base, String symbol, String date) {
         return "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + symbol;
     }
 
@@ -33,8 +31,8 @@ public class ExchangerateReader {
     }
 
     //date format YYYY-MM-DD
-    public String createAPICallForHistoryGoldRate(LocalDateTime date) {
-        return "https://api.exchangerate.host/" + date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "?base=XAU&symbols=PLN";
+    public String createAPICallForHistoryGoldRate(String date) {
+        return "https://api.exchangerate.host/" + date + "?base=XAU&symbols=PLN";
     }
 
     public RateValue getLatestRates(String base, String symbol) {
@@ -48,7 +46,7 @@ public class ExchangerateReader {
     }
 
 
-    public RateValue getHistoryRates(String base, String symbol, LocalDateTime date) {
+    public RateValue getHistoryRates(String base, String symbol, String date) {
         URI uri = null;
         try {
             uri = new URI(createAPICallForHistoryRate(base, symbol, date));
@@ -68,7 +66,7 @@ public class ExchangerateReader {
         return getRateValue(uri);
     }
 
-    public RateValue getHistoryGoldRates(LocalDateTime date) {
+    public RateValue getHistoryGoldRates(String date) {
         URI uri = null;
         try {
             uri = new URI(createAPICallForHistoryGoldRate(date));
