@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +21,5 @@ public class CurrencyRate {
     @Column(name = "rate", nullable = false)
     private Double rate;
     @Column(name = "date", nullable = false)
-    private LocalDateTime date;
+    private String date;
 }
