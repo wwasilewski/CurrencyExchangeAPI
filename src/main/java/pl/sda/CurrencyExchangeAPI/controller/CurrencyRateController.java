@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.sda.CurrencyExchangeAPI.dto.CurrencyRateDto;
 import pl.sda.CurrencyExchangeAPI.service.CurrencyExchangeService;
 
-import java.time.LocalDateTime;
-
 @RestController
 public class CurrencyRateController {
 
@@ -28,7 +26,7 @@ public class CurrencyRateController {
     @GetMapping("/api/currency/history/{base}/{target}/{date}")
     public CurrencyRateDto getOldCurrencyRate(@PathVariable String base,
                                               @PathVariable String target,
-                                              @PathVariable LocalDateTime date) {
+                                              @PathVariable String date) {
         return currencyExchangeService.getOldCurrencyRate(base, target, date);
     }
 
@@ -41,7 +39,7 @@ public class CurrencyRateController {
 
 
     @GetMapping("/api/gold/history/{date}")
-    public CurrencyRateDto getOldGoldPrice(@PathVariable LocalDateTime date) {
+    public CurrencyRateDto getOldGoldPrice(@PathVariable String date) {
         return currencyExchangeService.getOldGoldRate(date);
     }
 
