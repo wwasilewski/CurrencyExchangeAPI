@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @RestController
 public class CurrencyRateController {
 
-    private CurrencyExchangeService currencyExchangeService;
+    private final CurrencyExchangeService currencyExchangeService;
 
     @Autowired
     public CurrencyRateController(CurrencyExchangeService currencyExchangeService) {
@@ -33,16 +33,16 @@ public class CurrencyRateController {
     }
 
 
-    //TODO
-    @GetMapping("/api/gold/latest/{todo}")
+
+    @GetMapping("/api/gold/latest")
     public CurrencyRateDto getLatestGoldPrice() {
-        return null;
+        return currencyExchangeService.getLatestGoldRate();
     }
 
-    //TODO
-    @GetMapping("/api/gold/history/{todo}")
-    public CurrencyRateDto getOldGoldPrice() {
-        return null;
+
+    @GetMapping("/api/gold/history/{date}")
+    public CurrencyRateDto getOldGoldPrice(@PathVariable LocalDateTime date) {
+        return currencyExchangeService.getOldGoldRate(date);
     }
 
 
