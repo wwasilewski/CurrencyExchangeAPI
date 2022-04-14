@@ -12,6 +12,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -27,6 +28,15 @@ public class ExchangerateReader {
         return "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + symbol;
     }
 
+    public String createAPICallForLatestGoldRate() {
+        return "https://api.exchangerate.host/latest?base=XAU&symbols=PLN";
+    }
+
+    //date format YYYY-MM-DD
+    public String createAPICallForHistoryGoldRate(LocalDateTime date) {
+        return "https://api.exchangerate.host/" + date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "?base=XAU&symbols=PLN";
+    }
+
     public RateValue getLatestRates(String base, String symbol) {
         URI uri = null;
         try {
@@ -34,22 +44,9 @@ public class ExchangerateReader {
         } catch (URISyntaxException e) {
             log.error(e.getMessage(), e);
         }
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri)
-                .build();
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse<String> response = null;
-
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
-        Gson mapper = new Gson();
-
-        return mapper.fromJson(response.body(), RateValue.class);
+        return getRateValue(uri);
     }
+
 
     public RateValue getHistoryRates(String base, String symbol, LocalDateTime date) {
         URI uri = null;
@@ -58,6 +55,30 @@ public class ExchangerateReader {
         } catch (URISyntaxException e) {
             log.error(e.getMessage(), e);
         }
+        return getRateValue(uri);
+    }
+
+    public RateValue getLatestGoldRates() {
+        URI uri = null;
+        try {
+            uri = new URI(createAPICallForLatestGoldRate());
+        } catch (URISyntaxException e) {
+            log.error(e.getMessage(), e);
+        }
+        return getRateValue(uri);
+    }
+
+    public RateValue getHistoryGoldRates(LocalDateTime date) {
+        URI uri = null;
+        try {
+            uri = new URI(createAPICallForHistoryGoldRate(date));
+        } catch (URISyntaxException e) {
+            log.error(e.getMessage(), e);
+        }
+        return getRateValue(uri);
+    }
+
+    private RateValue getRateValue(URI uri) {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)

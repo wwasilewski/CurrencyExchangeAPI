@@ -13,9 +13,9 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class CurrencyExchangeService {
 
-    private CurrencyRepository currencyRepository;
-    private CurrencyMapper currencyMapper;
-    private ExchangerateReader exchangerateReader;
+    private final CurrencyRepository currencyRepository;
+    private final CurrencyMapper currencyMapper;
+    private final ExchangerateReader exchangerateReader;
 
     @Autowired
     public CurrencyExchangeService(CurrencyRepository currencyRepository, CurrencyMapper currencyMapper,
@@ -25,39 +25,63 @@ public class CurrencyExchangeService {
         this.exchangerateReader = exchangerateReader;
     }
 
-    //TODO
-    public CurrencyRateDto getLatestCurrencyRate(String base, String target) {
 
-        //get currency to process from api
+    public CurrencyRateDto getLatestCurrencyRate(String base, String target) {
         RateValue rateValue = exchangerateReader.getLatestRates(base, target);
+
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase(base);
         currencyRate.setTarget(target);
         currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
         currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        //save currency to db
-        currencyRepository.save(currencyRate);
-        //map currency to currencyDto
-        CurrencyRateDto currencyRateDto = currencyMapper.map(currencyRate);
 
-        return currencyRateDto;
+        currencyRepository.save(currencyRate);
+
+        return currencyMapper.map(currencyRate);
     }
 
-    //TODO
-    public CurrencyRateDto getOldCurrencyRate(String base, String target, LocalDateTime date) {
 
-        //get old currency to process from api
+    public CurrencyRateDto getOldCurrencyRate(String base, String target, LocalDateTime date) {
         RateValue rateValue = exchangerateReader.getHistoryRates(base, target, date);
+
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase(base);
         currencyRate.setTarget(target);
         currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
         currencyRate.setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        //save currency to db
-        currencyRepository.save(currencyRate);
-        //map currency to currencyDto
-        CurrencyRateDto currencyRateDto = currencyMapper.map(currencyRate);
 
-        return currencyRateDto;
+        currencyRepository.save(currencyRate);
+
+        return currencyMapper.map(currencyRate);
     }
+
+
+    public CurrencyRateDto getLatestGoldRate() {
+        RateValue rateValue = exchangerateReader.getLatestGoldRates();
+
+        CurrencyRate currencyRate = new CurrencyRate();
+        currencyRate.setBase("XAU");
+        currencyRate.setTarget("PLN");
+        currencyRate.setRate(rateValue.getRates().get(currencyRate.getTarget()));
+        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        currencyRepository.save(currencyRate);
+
+        return currencyMapper.map(currencyRate);
+    }
+
+    public CurrencyRateDto getOldGoldRate(LocalDateTime date) {
+        RateValue rateValue = exchangerateReader.getHistoryGoldRates(date);
+
+        CurrencyRate currencyRate = new CurrencyRate();
+        currencyRate.setBase("XAU");
+        currencyRate.setTarget("PLN");
+        currencyRate.setRate(rateValue.getRates().get(currencyRate.getTarget()));
+        currencyRate.setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        currencyRepository.save(currencyRate);
+
+        return currencyMapper.map(currencyRate);
+    }
+
 }
