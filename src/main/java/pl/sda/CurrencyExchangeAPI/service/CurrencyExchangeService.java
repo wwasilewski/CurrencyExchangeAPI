@@ -27,61 +27,94 @@ public class CurrencyExchangeService {
 
 
     public CurrencyRateDto getLatestCurrencyRate(String base, String target) {
-        RateValue rateValue = exchangerateReader.getLatestRates(base, target);
-
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase(base);
-        currencyRate.setTarget(target);
-        currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
+        currencyRate.setBase(base.toUpperCase());
+        currencyRate.setTarget(target.toUpperCase());
         currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-        currencyRepository.save(currencyRate);
-
-        return currencyMapper.map(currencyRate);
+        if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                currencyRate.getBase(),
+                currencyRate.getTarget(),
+                currencyRate.getDate()
+                ) != null) {
+            return currencyMapper.map(currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                    currencyRate.getBase(),
+                    currencyRate.getTarget(),
+                    currencyRate.getDate()));
+        } else {
+            RateValue rateValue = exchangerateReader.getLatestRates(base, target);
+            currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
+            currencyRepository.save(currencyRate);
+            return currencyMapper.map(currencyRate);
+        }
     }
 
 
-    public CurrencyRateDto getOldCurrencyRate(String base, String target, LocalDateTime date) {
-        RateValue rateValue = exchangerateReader.getHistoryRates(base, target, date);
-
+    public CurrencyRateDto getOldCurrencyRate(String base, String target, String date) {
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase(base);
-        currencyRate.setTarget(target);
-        currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
-        currencyRate.setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-        currencyRepository.save(currencyRate);
-
-        return currencyMapper.map(currencyRate);
+        currencyRate.setBase(base.toUpperCase());
+        currencyRate.setTarget(target.toUpperCase());
+        currencyRate.setDate(date);
+        if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                currencyRate.getBase(),
+                currencyRate.getTarget(),
+                currencyRate.getDate()
+        ) != null) {
+            return currencyMapper.map(currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                    currencyRate.getBase(),
+                    currencyRate.getTarget(),
+                    currencyRate.getDate()));
+        } else {
+            RateValue rateValue = exchangerateReader.getHistoryRates(base, target, date);
+            currencyRate.setRate(rateValue.getRates().get(target.toUpperCase()));
+            currencyRepository.save(currencyRate);
+            return currencyMapper.map(currencyRate);
+        }
     }
 
 
     public CurrencyRateDto getLatestGoldRate() {
-        RateValue rateValue = exchangerateReader.getLatestGoldRates();
-
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase("XAU");
         currencyRate.setTarget("PLN");
-        currencyRate.setRate(rateValue.getRates().get(currencyRate.getTarget()));
         currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-        currencyRepository.save(currencyRate);
-
-        return currencyMapper.map(currencyRate);
+        if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                currencyRate.getBase(),
+                currencyRate.getTarget(),
+                currencyRate.getDate()
+        ) != null) {
+            return currencyMapper.map(currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                    currencyRate.getBase(),
+                    currencyRate.getTarget(),
+                    currencyRate.getDate()));
+        } else {
+            RateValue rateValue = exchangerateReader.getLatestGoldRates();
+            currencyRate.setRate(rateValue.getRates().get(currencyRate.getTarget()));
+            currencyRepository.save(currencyRate);
+            return currencyMapper.map(currencyRate);
+        }
     }
 
-    public CurrencyRateDto getOldGoldRate(LocalDateTime date) {
-        RateValue rateValue = exchangerateReader.getHistoryGoldRates(date);
-
+    public CurrencyRateDto getOldGoldRate(String date) {
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase("XAU");
         currencyRate.setTarget("PLN");
-        currencyRate.setRate(rateValue.getRates().get(currencyRate.getTarget()));
-        currencyRate.setDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-        currencyRepository.save(currencyRate);
-
-        return currencyMapper.map(currencyRate);
+        currencyRate.setDate(date);
+        if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                currencyRate.getBase(),
+                currencyRate.getTarget(),
+                currencyRate.getDate()
+        ) != null) {
+            return currencyMapper.map(currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
+                    currencyRate.getBase(),
+                    currencyRate.getTarget(),
+                    currencyRate.getDate()));
+        } else {
+            RateValue rateValue = exchangerateReader.getHistoryGoldRates(date);
+            currencyRate.setRate(rateValue.getRates().get(currencyRate.getTarget()));
+            currencyRepository.save(currencyRate);
+            return currencyMapper.map(currencyRate);
+        }
     }
+
 
 }
