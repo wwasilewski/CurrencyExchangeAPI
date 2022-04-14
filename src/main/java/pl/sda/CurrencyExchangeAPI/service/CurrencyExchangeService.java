@@ -28,8 +28,8 @@ public class CurrencyExchangeService {
 
     public CurrencyRateDto getLatestCurrencyRate(String base, String target) {
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase(base);
-        currencyRate.setTarget(target);
+        currencyRate.setBase(base.toUpperCase());
+        currencyRate.setTarget(target.toUpperCase());
         currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),
@@ -51,8 +51,8 @@ public class CurrencyExchangeService {
 
     public CurrencyRateDto getOldCurrencyRate(String base, String target, String date) {
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase(base);
-        currencyRate.setTarget(target);
+        currencyRate.setBase(base.toUpperCase());
+        currencyRate.setTarget(target.toUpperCase());
         currencyRate.setDate(date);
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),
