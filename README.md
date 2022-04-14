@@ -1,19 +1,65 @@
-# Getting Started
 
-### Reference Documentation
-For further reference, please consider the following sections:
+# Exchange rates REST API
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.6/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.6/maven-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.6.6/reference/htmlsingle/#boot-features-developing-web-applications)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.6/reference/htmlsingle/#boot-features-jpa-and-spring-data)
+This API supports latest and historical currency exchange rates and gold prices.
 
-### Guides
-The following guides illustrate how to use some features concretely:
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+## API Reference examples
+
+#### Get latest rate for base and target currency
+
+```http
+  GET /api/currency/latest/{base}/{target}
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `base`    | `string` | **Required**. symbol of the base currency |
+| `target`  | `string` | **Required**. symbol of the target currency |
+
+
+#### Get rate for base and target currency for specific date
+
+```http
+  GET /api/currency/history/{base}/{target}/{date}
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `base`    | `string` | **Required**. symbol of the base currency |
+| `target`  | `string` | **Required**. symbol of the target currency |
+| `date`    | `string` | **Required**. requested date in format YYYY-MM-DD |
+
+
+#### Get latest price of gold in polish zloty PLN
+
+```http
+  GET /api/gold/latest
+```
+
+
+#### Get price of gold in polish zloty PLN for specific day
+
+```http
+  GET /api/gold/history/{date}
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `date`    | `string` | **Required**. requested date in format YYYY-MM-DD |
+
+
+
+
+## Tech Stack
+
+**Technologies:** Java, Spring Boot, H2
+
+
+
+
+## Authors
+
+- [@Wojciech Wasilewski](https://github.com/wwasilewski)
+- [@Katarzyna Sawicka](https://github.com/muskLisek)
 
