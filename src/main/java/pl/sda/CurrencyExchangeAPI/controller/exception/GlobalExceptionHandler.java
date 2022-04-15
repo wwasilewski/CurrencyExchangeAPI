@@ -13,8 +13,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ExchangeProcessingException.class)
-    public ErrorMessage handleExchangeProcessingException(final ExchangeProcessingException exception) {
+    public ErrorResponse handleExchangeProcessingException(final ExchangeProcessingException exception) {
         log.debug("EXCEPTION!");
-        return new ErrorMessage(exception.getMessage());
+        return new ErrorResponse(exception.getMessage());
     }
 }

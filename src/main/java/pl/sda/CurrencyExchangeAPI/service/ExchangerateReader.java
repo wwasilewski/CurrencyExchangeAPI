@@ -86,7 +86,10 @@ public class ExchangerateReader {
 
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
+            throw new ExchangeProcessingException("no such currency");
+//            log.error(e.getMessage(), e);
+        } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
         Gson mapper = new Gson();

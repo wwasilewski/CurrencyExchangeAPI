@@ -18,7 +18,7 @@ public class CurrencyRate {
     private String base;
     @Column(name = "target", nullable = false)
     private String target;
-    @Column(name = "rate", nullable = false)
+    @Column(name = "rate")
     private Double rate;
     @Column(name = "date", nullable = false)
     private String date;
