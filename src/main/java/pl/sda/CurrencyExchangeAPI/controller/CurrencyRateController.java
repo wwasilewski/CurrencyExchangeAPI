@@ -11,6 +11,7 @@ import pl.sda.CurrencyExchangeAPI.service.CurrencyExchangeService;
 public class CurrencyRateController {
 
     private final CurrencyExchangeService currencyExchangeService;
+    private static final String GOLD_SYMBOL = "XAU";
 
     @Autowired
     public CurrencyRateController(CurrencyExchangeService currencyExchangeService) {
@@ -30,12 +31,10 @@ public class CurrencyRateController {
         return currencyExchangeService.getOldCurrencyRate(base, target, date);
     }
 
-
     @GetMapping("/api/gold/latest")
     public CurrencyRateDto getLatestGoldPrice() {
         return currencyExchangeService.getLatestGoldRate();
     }
-
 
     @GetMapping("/api/gold/history/{date}")
     public CurrencyRateDto getOldGoldPrice(@PathVariable String date) {
@@ -47,9 +46,14 @@ public class CurrencyRateController {
         return currencyExchangeService.getDbCount();
     }
 
-//    @GetMapping("/api/stats/gold")
-//    public long getDbGoldRecordsCount() {
-//        return currencyExchangeService.findAllGoldRecords();
-//    }
+    @GetMapping("/api/stats/gold")
+    public long getDbGoldRecordsCount() {
+        return currencyExchangeService.getDbCountForCurrency(GOLD_SYMBOL).size();
+    }
+
+    @GetMapping("/api/stats/{base}")
+    public long getDbEURRecordsCount(@PathVariable String base) {
+        return currencyExchangeService.getDbCountForCurrency(base).size();
+    }
 
 }

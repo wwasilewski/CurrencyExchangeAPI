@@ -26,7 +26,6 @@ public class CurrencyExchangeService {
         this.exchangerateReader = exchangerateReader;
     }
 
-
     public CurrencyRateDto getLatestCurrencyRate(String base, String target) {
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase(base.toUpperCase());
@@ -49,7 +48,6 @@ public class CurrencyExchangeService {
         }
     }
 
-
     public CurrencyRateDto getOldCurrencyRate(String base, String target, String date) {
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase(base.toUpperCase());
@@ -71,7 +69,6 @@ public class CurrencyExchangeService {
             return currencyMapper.map(currencyRate);
         }
     }
-
 
     public CurrencyRateDto getLatestGoldRate() {
         CurrencyRate currencyRate = new CurrencyRate();
@@ -117,16 +114,11 @@ public class CurrencyExchangeService {
         }
     }
 
-
     public long getDbCount() {
         return currencyRepository.count();
     }
 
-//    public long findAllGoldRecords(String base) {
-//        if(currencyRepository.findCurrencyRateByBase(base).equals("XAU"))
-//
-//        return currencyRepository.
-//
-//        return currencyRepository.findAllGoldRecords();
-//    }
+    public List<CurrencyRate> getDbCountForCurrency(String base) {
+        return currencyRepository.findByBase(base.toUpperCase());
+    }
 }
