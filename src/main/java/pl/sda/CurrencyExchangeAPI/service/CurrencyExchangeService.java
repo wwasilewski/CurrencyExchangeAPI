@@ -15,11 +15,11 @@ public class CurrencyExchangeService {
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
-    private final ExchangerateReader exchangerateReader;
+    private final ExchangeRateReader exchangerateReader;
 
     @Autowired
     public CurrencyExchangeService(CurrencyRepository currencyRepository, CurrencyMapper currencyMapper,
-                                   ExchangerateReader exchangerateReader) {
+                                   ExchangeRateReader exchangerateReader) {
         this.currencyRepository = currencyRepository;
         this.currencyMapper = currencyMapper;
         this.exchangerateReader = exchangerateReader;
