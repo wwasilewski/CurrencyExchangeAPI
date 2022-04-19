@@ -8,6 +8,7 @@ import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
 public class CurrencyMapper {
 
     public CurrencyRateDto map(CurrencyRate currencyRate) {
-        return new CurrencyRateDto(currencyRate.getRate());
+
+        return new CurrencyRateDto(currencyRate.getRate(), currencyRate.getDate());
     }
 }

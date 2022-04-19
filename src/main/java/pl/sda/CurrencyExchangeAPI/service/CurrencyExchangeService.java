@@ -7,11 +7,16 @@ import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.repository.CurrencyRepository;
 
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
 public class CurrencyExchangeService {
+
+    private final String goldSymbol = "XAU";
+    private final String zlotySymbol = "PLN";
+    private final String dateFormat = "yyyy-MM-dd";
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
@@ -30,7 +35,7 @@ public class CurrencyExchangeService {
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase(base.toUpperCase());
         currencyRate.setTarget(target.toUpperCase());
-        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)));
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),
                 currencyRate.getTarget(),
@@ -46,6 +51,7 @@ public class CurrencyExchangeService {
             currencyRepository.save(currencyRate);
             return currencyMapper.map(currencyRate);
         }
+
     }
 
 
@@ -74,9 +80,9 @@ public class CurrencyExchangeService {
 
     public CurrencyRateDto getLatestGoldRate() {
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase("XAU");
-        currencyRate.setTarget("PLN");
-        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        currencyRate.setBase(goldSymbol);
+        currencyRate.setTarget(zlotySymbol);
+        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)));
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),
                 currencyRate.getTarget(),
@@ -96,8 +102,8 @@ public class CurrencyExchangeService {
 
     public CurrencyRateDto getOldGoldRate(String date) {
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase("XAU");
-        currencyRate.setTarget("PLN");
+        currencyRate.setBase(goldSymbol);
+        currencyRate.setTarget(zlotySymbol);
         currencyRate.setDate(date);
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),
