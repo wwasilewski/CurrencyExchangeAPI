@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class CurrencyRateDto {
 
     private Double rate;
+    private String date;
 }

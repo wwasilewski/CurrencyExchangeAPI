@@ -18,6 +18,7 @@ public class ExchangeRateReader {
 
     public String createAPICallForLatestRate(String base, String symbol) {
         return "https://api.exchangerate.host/latest?base=" + base + "&symbols=" + symbol;
+
     }
 
     //date format YYYY-MM-DD
@@ -34,24 +35,36 @@ public class ExchangeRateReader {
         return "https://api.exchangerate.host/" + date + "?base=XAU&symbols=PLN";
     }
 
+    public String createAPICallForAllCurrencyMap() {
+        return "https://api.exchangerate.host/latest";
+    }
+
     public RateValue getLatestRates(String base, String symbol) {
         URI uri = null;
+        if(isCurrencyExisting(base, symbol)) {
         try {
             uri = new URI(createAPICallForLatestRate(base, symbol));
         } catch (URISyntaxException e) {
             log.error(e.getMessage(), e);
         }
         return getRateValue(uri);
+    } else {
+            throw new ExchangeProcessingException("No such currency found");
+        }
     }
 
     public RateValue getHistoryRates(String base, String symbol, String date) {
         URI uri = null;
-        try {
-            uri = new URI(createAPICallForHistoryRate(base, symbol, date));
-        } catch (URISyntaxException e) {
-            log.error(e.getMessage(), e);
+        if(isCurrencyExisting(base, symbol)) {
+            try {
+                uri = new URI(createAPICallForHistoryRate(base, symbol, date));
+            } catch (URISyntaxException e) {
+                log.error(e.getMessage(), e);
+            }
+            return getRateValue(uri);
+        } else {
+            throw new ExchangeProcessingException("No such currency found");
         }
-        return getRateValue(uri);
     }
 
     public RateValue getLatestGoldRates() {
@@ -74,6 +87,16 @@ public class ExchangeRateReader {
         return getRateValue(uri);
     }
 
+    public RateValue getAllCurrencyMap() {
+        URI uri = null;
+        try {
+            uri = new URI(createAPICallForAllCurrencyMap());
+        } catch (URISyntaxException e) {
+            log.error(e.getMessage(), e);
+        }
+        return getRateValue(uri);
+    }
+
     private RateValue getRateValue(URI uri) {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -81,23 +104,21 @@ public class ExchangeRateReader {
                 .build();
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response = null;
-
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-//            throw new ExchangeProcessingException("no such currency");
-            log.error(e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
         Gson mapper = new Gson();
+        return mapper.fromJson(response.body(), RateValue.class);
+    }
 
-        RateValue rateValue = mapper.fromJson(response.body(), RateValue.class);
-
-        // na razie na potrzeby sprawdzenia
-//        if (rateValue.getRates().size() != 0) {
-//            throw new ExchangeProcessingException("no such currency");
-//        }
-        return rateValue;
+    public boolean isCurrencyExisting(String base, String target) {
+        return getAllCurrencyMap()
+                .getRates()
+                .containsKey(base.toUpperCase())
+                && getAllCurrencyMap()
+                .getRates()
+                .containsKey(target.toUpperCase());
     }
 }
