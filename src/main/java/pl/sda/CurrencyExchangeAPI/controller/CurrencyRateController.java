@@ -31,7 +31,6 @@ public class CurrencyRateController {
     }
 
 
-
     @GetMapping("/api/gold/latest")
     public CurrencyRateDto getLatestGoldPrice() {
         return currencyExchangeService.getLatestGoldRate();
@@ -43,5 +42,14 @@ public class CurrencyRateController {
         return currencyExchangeService.getOldGoldRate(date);
     }
 
+    @GetMapping("/api/stats/all")
+    public long getDbRecordsCount() {
+        return currencyExchangeService.getDbCount();
+    }
+
+//    @GetMapping("/api/stats/gold")
+//    public long getDbGoldRecordsCount() {
+//        return currencyExchangeService.findAllGoldRecords();
+//    }
 
 }

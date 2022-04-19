@@ -9,6 +9,7 @@ import pl.sda.CurrencyExchangeAPI.repository.CurrencyRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class CurrencyExchangeService {
@@ -35,7 +36,7 @@ public class CurrencyExchangeService {
                 currencyRate.getBase(),
                 currencyRate.getTarget(),
                 currencyRate.getDate()
-                ) != null) {
+        ) != null) {
             return currencyMapper.map(currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                     currencyRate.getBase(),
                     currencyRate.getTarget(),
@@ -117,4 +118,15 @@ public class CurrencyExchangeService {
     }
 
 
+    public long getDbCount() {
+        return currencyRepository.count();
+    }
+
+//    public long findAllGoldRecords(String base) {
+//        if(currencyRepository.findCurrencyRateByBase(base).equals("XAU"))
+//
+//        return currencyRepository.
+//
+//        return currencyRepository.findAllGoldRecords();
+//    }
 }
