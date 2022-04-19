@@ -14,8 +14,7 @@ import java.net.http.HttpResponse;
 
 @Slf4j
 @Service
-public class ExchangerateReader {
-
+public class ExchangeRateReader {
 
     public String createAPICallForLatestRate(String base, String symbol) {
         return "https://api.exchangerate.host/latest?base=" + base + "&symbols=" + symbol;
@@ -44,7 +43,6 @@ public class ExchangerateReader {
         }
         return getRateValue(uri);
     }
-
 
     public RateValue getHistoryRates(String base, String symbol, String date) {
         URI uri = null;
@@ -86,11 +84,20 @@ public class ExchangerateReader {
 
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
+//            throw new ExchangeProcessingException("no such currency");
+            log.error(e.getMessage(), e);
+        } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
         Gson mapper = new Gson();
 
-        return mapper.fromJson(response.body(), RateValue.class);
+        RateValue rateValue = mapper.fromJson(response.body(), RateValue.class);
+
+        // na razie na potrzeby sprawdzenia
+//        if (rateValue.getRates().size() != 0) {
+//            throw new ExchangeProcessingException("no such currency");
+//        }
+        return rateValue;
     }
 }
