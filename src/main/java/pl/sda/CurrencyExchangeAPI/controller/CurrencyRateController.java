@@ -52,8 +52,15 @@ public class CurrencyRateController {
     }
 
     @GetMapping("/api/stats/{base}")
-    public long getDbEURRecordsCount(@PathVariable String base) {
+    public long getDbCustomCurrencyRecordsCount(@PathVariable String base) {
         return currencyExchangeService.getDbCountForCurrency(base).size();
     }
 
+    @GetMapping("/api/stats/{base}/{target}/{dateFrom}/{dateTo}")
+    public CurrencyRateDto getStatsForPeriod(@PathVariable String base,
+                                             @PathVariable String target,
+                                             @PathVariable String dateFrom,
+                                             @PathVariable String dateTo) {
+        return currencyExchangeService.getStatsForPeriod(base, target, dateFrom, dateTo);
+    }
 }

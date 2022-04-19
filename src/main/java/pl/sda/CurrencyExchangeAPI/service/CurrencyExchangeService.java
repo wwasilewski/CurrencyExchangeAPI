@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public class CurrencyExchangeService {
 
-    private final String goldSymbol = "XAU";
-    private final String zlotySymbol = "PLN";
-    private final String dateFormat = "yyyy-MM-dd";
+    private static final String goldSymbol = "XAU";
+    private static final String zlotySymbol = "PLN";
+    private static final String dateFormat = "yyyy-MM-dd";
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
@@ -51,7 +51,6 @@ public class CurrencyExchangeService {
             currencyRepository.save(currencyRate);
             return currencyMapper.map(currencyRate);
         }
-
     }
 
     public CurrencyRateDto getOldCurrencyRate(String base, String target, String date) {
@@ -126,5 +125,10 @@ public class CurrencyExchangeService {
 
     public List<CurrencyRate> getDbCountForCurrency(String base) {
         return currencyRepository.findByBase(base.toUpperCase());
+    }
+
+    public CurrencyRateDto getStatsForPeriod(String base, String target, String dateFrom, String dateTo) {
+
+        return null;
     }
 }
