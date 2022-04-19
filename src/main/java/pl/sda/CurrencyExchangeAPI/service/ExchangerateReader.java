@@ -35,6 +35,10 @@ public class ExchangerateReader {
         return "https://api.exchangerate.host/" + date + "?base=XAU&symbols=PLN";
     }
 
+    public String createAPICallForAllCurrencyMap() {
+        return "https://api.exchangerate.host/latest";
+    }
+
     public RateValue getLatestRates(String base, String symbol) {
         URI uri = null;
         try {
@@ -70,6 +74,16 @@ public class ExchangerateReader {
         URI uri = null;
         try {
             uri = new URI(createAPICallForHistoryGoldRate(date));
+        } catch (URISyntaxException e) {
+            log.error(e.getMessage(), e);
+        }
+        return getRateValue(uri);
+    }
+
+    public RateValue getAllCurrencyMap() {
+        URI uri = null;
+        try {
+            uri = new URI(createAPICallForAllCurrencyMap());
         } catch (URISyntaxException e) {
             log.error(e.getMessage(), e);
         }
