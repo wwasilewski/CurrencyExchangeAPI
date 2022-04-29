@@ -1,11 +1,15 @@
 package pl.sda.CurrencyExchangeAPI.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
 
-@Repository
-public interface CurrencyRepository extends CrudRepository<CurrencyRate, Integer> {
+import java.util.List;
 
-    public CurrencyRate findCurrencyRateByBaseAndTargetAndDate(String base, String target, String date);
+@Repository
+public interface CurrencyRepository extends JpaRepository<CurrencyRate, Integer> {
+
+    CurrencyRate findCurrencyRateByBaseAndTargetAndDate(String base, String target, String date);
+
+    List<CurrencyRate> findByBase(String base);
 }

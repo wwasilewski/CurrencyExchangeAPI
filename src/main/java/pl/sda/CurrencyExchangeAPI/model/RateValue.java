@@ -6,5 +6,6 @@ import java.util.Map;
 
 @Data
 public class RateValue {
+
     private Map<String, Double> rates;
 }
