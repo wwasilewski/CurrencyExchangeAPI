@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
+import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
 
 import java.io.IOException;
 import java.net.URI;
@@ -39,8 +40,8 @@ public class ExchangeRateReader {
     }
 
     //https://api.exchangerate.host/timeseries?start_date=2020-01-01&end_date=2020-01-04&base=usd&symbols=PLN
-    public String createAPICallForStatsPeriod(String base, String target, String dateFrom, String dateTo) {
-        return "https://api.exchangerate.host/timeseries?start_date=" + dateFrom + "&end_date=" + dateTo + "&base=" + base + "&symbols=" + target;
+    public String createAPICallForStatisticsForPeriod(String base, String target, String dateFrom, String dateTo) {
+        return "https://api.exchangerate.host/timeseries?start_date=" + dateFrom + "&end_date=" + dateTo + "&base=" + base + "&symbols=" + target.toUpperCase();
     }
 
     public RateValue getLatestRates(String base, String symbol) {
@@ -71,15 +72,15 @@ public class ExchangeRateReader {
         }
     }
 
-    public RateValue getStatsForPeriod(String base, String target, String dateFrom, String dateTo) {
+    public StatisticsValue getStatisticsForPeriod(String base, String target, String dateFrom, String dateTo) {
         URI uri = null;
         if (isCurrencyExisting(base, target)) {
             try {
-                uri = new URI(createAPICallForStatsPeriod(base, target, dateFrom, dateTo));
+                uri = new URI(createAPICallForStatisticsForPeriod(base, target, dateFrom, dateTo));
             } catch (URISyntaxException e) {
                 log.error(e.getMessage(), e);
             }
-            return getRateValue(uri);
+            return getStatsValue(uri);
         } else {
             throw new ExchangeProcessingException("No such currency found");
         }
@@ -129,6 +130,22 @@ public class ExchangeRateReader {
         }
         Gson mapper = new Gson();
         return mapper.fromJson(response.body(), RateValue.class);
+    }
+
+    private StatisticsValue getStatsValue(URI uri) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri)
+                .build();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
+        Gson mapper = new Gson();
+        return mapper.fromJson(response.body(), StatisticsValue.class);
     }
 
     public boolean isCurrencyExisting(String base, String target) {

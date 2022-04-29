@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pl.sda.CurrencyExchangeAPI.dto.CurrencyRateDto;
+import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
 import pl.sda.CurrencyExchangeAPI.service.CurrencyExchangeService;
 
 @RestController
@@ -57,10 +58,10 @@ public class CurrencyRateController {
     }
 
     @GetMapping("/api/stats/{base}/{target}/{dateFrom}/{dateTo}")
-    public CurrencyRateDto getStatsForPeriod(@PathVariable String base,
-                                             @PathVariable String target,
-                                             @PathVariable String dateFrom,
-                                             @PathVariable String dateTo) {
+    public StatisticsValue getStatisticsForPeriod(@PathVariable String base,
+                                                  @PathVariable String target,
+                                                  @PathVariable String dateFrom,
+                                                  @PathVariable String dateTo) {
         return currencyExchangeService.getStatsForPeriod(base, target, dateFrom, dateTo);
     }
 }

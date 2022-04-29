@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.sda.CurrencyExchangeAPI.dto.CurrencyRateDto;
 import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
+import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
 import pl.sda.CurrencyExchangeAPI.repository.CurrencyRepository;
 
 
@@ -127,8 +128,7 @@ public class CurrencyExchangeService {
         return currencyRepository.findByBase(base.toUpperCase());
     }
 
-    public CurrencyRateDto getStatsForPeriod(String base, String target, String dateFrom, String dateTo) {
-
-        return null;
+    public StatisticsValue getStatsForPeriod(String base, String target, String dateFrom, String dateTo) {
+        return exchangerateReader.getStatisticsForPeriod(base, target, dateFrom, dateTo);
     }
 }
