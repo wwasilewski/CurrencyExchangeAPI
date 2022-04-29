@@ -7,16 +7,15 @@ import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.repository.CurrencyRepository;
 
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
 public class CurrencyExchangeService {
 
-    private final String goldSymbol = "XAU";
-    private final String zlotySymbol = "PLN";
-    private final String dateFormat = "yyyy-MM-dd";
+    private static final String goldSymbol = "XAU";
+    private static final String zlotySymbol = "PLN";
+    private static final String dateFormat = "yyyy-MM-dd";
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
@@ -30,7 +29,6 @@ public class CurrencyExchangeService {
         this.exchangerateReader = exchangerateReader;
     }
 
-
     public CurrencyRateDto getLatestCurrencyRate(String base, String target) {
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase(base.toUpperCase());
@@ -40,7 +38,7 @@ public class CurrencyExchangeService {
                 currencyRate.getBase(),
                 currencyRate.getTarget(),
                 currencyRate.getDate()
-                ) != null) {
+        ) != null) {
             return currencyMapper.map(currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                     currencyRate.getBase(),
                     currencyRate.getTarget(),
@@ -51,9 +49,7 @@ public class CurrencyExchangeService {
             currencyRepository.save(currencyRate);
             return currencyMapper.map(currencyRate);
         }
-
     }
-
 
     public CurrencyRateDto getOldCurrencyRate(String base, String target, String date) {
         CurrencyRate currencyRate = new CurrencyRate();
@@ -76,7 +72,6 @@ public class CurrencyExchangeService {
             return currencyMapper.map(currencyRate);
         }
     }
-
 
     public CurrencyRateDto getLatestGoldRate() {
         CurrencyRate currencyRate = new CurrencyRate();
@@ -121,6 +116,4 @@ public class CurrencyExchangeService {
             return currencyMapper.map(currencyRate);
         }
     }
-
-
 }
