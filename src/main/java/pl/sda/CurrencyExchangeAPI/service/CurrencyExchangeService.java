@@ -5,13 +5,10 @@ import org.springframework.stereotype.Service;
 import pl.sda.CurrencyExchangeAPI.dto.CurrencyRateDto;
 import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
-import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
 import pl.sda.CurrencyExchangeAPI.repository.CurrencyRepository;
-
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Service
 public class CurrencyExchangeService {
@@ -118,17 +115,5 @@ public class CurrencyExchangeService {
             currencyRepository.save(currencyRate);
             return currencyMapper.map(currencyRate);
         }
-    }
-
-    public long getDbCount() {
-        return currencyRepository.count();
-    }
-
-    public List<CurrencyRate> getDbCountForCurrency(String base) {
-        return currencyRepository.findByBase(base.toUpperCase());
-    }
-
-    public StatisticsValue getStatsForPeriod(String base, String target, String dateFrom, String dateTo) {
-        return exchangerateReader.getStatisticsForPeriod(base, target, dateFrom, dateTo);
     }
 }
