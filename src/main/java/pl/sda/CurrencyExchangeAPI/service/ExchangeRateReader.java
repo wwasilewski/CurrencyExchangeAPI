@@ -2,6 +2,7 @@ package pl.sda.CurrencyExchangeAPI.service;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
@@ -16,6 +17,13 @@ import java.net.http.HttpResponse;
 @Slf4j
 @Service
 public class ExchangeRateReader {
+
+    private final Gson gson;
+
+    @Autowired
+    public ExchangeRateReader(Gson gson) {
+        this.gson = gson;
+    }
 
     public String createAPICallForLatestRate(String base, String symbol) {
         return "https://api.exchangerate.host/latest?base=" + base + "&symbols=" + symbol;
@@ -39,7 +47,6 @@ public class ExchangeRateReader {
         return "https://api.exchangerate.host/latest";
     }
 
-    //https://api.exchangerate.host/timeseries?start_date=2020-01-01&end_date=2020-01-04&base=usd&symbols=PLN
     public String createAPICallForStatisticsForPeriod(String base, String target, String dateFrom, String dateTo) {
         return "https://api.exchangerate.host/timeseries?start_date=" + dateFrom + "&end_date=" + dateTo + "&base=" + base + "&symbols=" + target.toUpperCase();
     }
@@ -128,8 +135,7 @@ public class ExchangeRateReader {
         } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
-        Gson mapper = new Gson();
-        return mapper.fromJson(response.body(), RateValue.class);
+        return gson.fromJson(response.body(), RateValue.class);
     }
 
     private StatisticsValue getStatsValue(URI uri) {
@@ -144,8 +150,7 @@ public class ExchangeRateReader {
         } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
-        Gson mapper = new Gson();
-        return mapper.fromJson(response.body(), StatisticsValue.class);
+        return gson.fromJson(response.body(), StatisticsValue.class);
     }
 
     public boolean isCurrencyExisting(String base, String target) {
