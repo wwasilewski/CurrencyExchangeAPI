@@ -11,8 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CurrencyRateController.class)
-class CurrencyRateControllerIntegrationTest {
+@WebMvcTest(GoldExchangeRateController.class)
+public class GoldExchangeRateControllerIntegrationTests {
 
     @MockBean
     CurrencyExchangeService currencyExchangeService;
@@ -21,27 +21,17 @@ class CurrencyRateControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    void badRequestTest() throws Exception {
-        mockMvc.perform(get("/wrongEndpoint")).andDo(print()).andExpect(status().is4xxClientError());
+    void shouldReturnHttp4xxWhenInvalidEndpointTest() throws Exception {
+        mockMvc.perform(get("/api/gold/invalidEndpoint")).andDo(print()).andExpect(status().is4xxClientError());
     }
 
     @Test
-    void okRequestForGoldLatestEndpointTest() throws Exception {
+    void shouldReturnHttp200ForGetLatestGoldPriceTest() throws Exception {
         mockMvc.perform(get("/api/gold/latest")).andExpect(status().isOk());
     }
 
     @Test
-    void okRequestForGoldHistoryEndpoint() throws Exception {
+    void shouldReturnHttp200ForGetOldGoldPriceTest() throws Exception {
         mockMvc.perform(get("/api/gold/history/2021-12-12")).andExpect(status().isOk());
-    }
-
-    @Test
-    void okRequestForCurrencyRateLatest() throws Exception {
-        mockMvc.perform(get("/api/currency/latest/EUR/USD")).andExpect(status().isOk());
-    }
-
-    @Test
-    void okRequestForCurrencyRateHistory() throws Exception {
-        mockMvc.perform(get("/api/currency/history/USD/EUR/2021-12-12")).andExpect(status().isOk());
     }
 }
