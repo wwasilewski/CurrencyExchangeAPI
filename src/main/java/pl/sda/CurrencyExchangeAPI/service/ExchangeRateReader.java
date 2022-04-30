@@ -3,6 +3,7 @@ package pl.sda.CurrencyExchangeAPI.service;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
@@ -19,36 +20,39 @@ import java.net.http.HttpResponse;
 public class ExchangeRateReader {
 
     private final Gson gson;
+    private final String apiURL;
 
     @Autowired
-    public ExchangeRateReader(Gson gson) {
+    public ExchangeRateReader(Gson gson, @Value("${api.url}") String apiURL) {
         this.gson = gson;
+        this.apiURL = apiURL;
     }
 
     public String createAPICallForLatestRate(String base, String symbol) {
-        return "https://api.exchangerate.host/latest?base=" + base + "&symbols=" + symbol;
+        return apiURL + base + "&symbols=" + symbol;
     }
 
     //date format YYYY-MM-DD
     public String createAPICallForHistoryRate(String base, String symbol, String date) {
-        return "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + symbol;
+        return apiURL + date + "?base=" + base + "&symbols=" + symbol;
     }
 
     public String createAPICallForLatestGoldRate() {
-        return "https://api.exchangerate.host/latest?base=XAU&symbols=PLN";
+        return apiURL + "latest?base=XAU&symbols=PLN";
     }
 
     //date format YYYY-MM-DD
     public String createAPICallForHistoryGoldRate(String date) {
-        return "https://api.exchangerate.host/" + date + "?base=XAU&symbols=PLN";
+        return apiURL + date + "?base=XAU&symbols=PLN";
     }
 
     public String createAPICallForAllCurrencyMap() {
-        return "https://api.exchangerate.host/latest";
+        return apiURL + "latest";
     }
 
+    //date format YYYY-MM-DD
     public String createAPICallForStatisticsForPeriod(String base, String target, String dateFrom, String dateTo) {
-        return "https://api.exchangerate.host/timeseries?start_date=" + dateFrom + "&end_date=" + dateTo + "&base=" + base + "&symbols=" + target.toUpperCase();
+        return apiURL + "timeseries?start_date=" + dateFrom + "&end_date=" + dateTo + "&base=" + base + "&symbols=" + target.toUpperCase();
     }
 
     public RateValue getLatestRates(String base, String symbol) {
