@@ -3,6 +3,7 @@ package pl.sda.CurrencyExchangeAPI.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.sda.CurrencyExchangeAPI.dto.CurrencyRateDto;
+import pl.sda.CurrencyExchangeAPI.model.Currency;
 import pl.sda.CurrencyExchangeAPI.model.CurrencyRate;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.repository.CurrencyRepository;
@@ -13,9 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class CurrencyExchangeService {
 
-    private static final String goldSymbol = "XAU";
-    private static final String zlotySymbol = "PLN";
-    private static final String dateFormat = "yyyy-MM-dd";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
@@ -33,7 +32,7 @@ public class CurrencyExchangeService {
         CurrencyRate currencyRate = new CurrencyRate();
         currencyRate.setBase(base.toUpperCase());
         currencyRate.setTarget(target.toUpperCase());
-        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)));
+        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),
                 currencyRate.getTarget(),
@@ -75,9 +74,9 @@ public class CurrencyExchangeService {
 
     public CurrencyRateDto getLatestGoldRate() {
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase(goldSymbol);
-        currencyRate.setTarget(zlotySymbol);
-        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)));
+        currencyRate.setBase(Currency.GOLD.symbol);
+        currencyRate.setTarget(Currency.PLN.symbol);
+        currencyRate.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),
                 currencyRate.getTarget(),
@@ -97,8 +96,8 @@ public class CurrencyExchangeService {
 
     public CurrencyRateDto getOldGoldRate(String date) {
         CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setBase(goldSymbol);
-        currencyRate.setTarget(zlotySymbol);
+        currencyRate.setBase(Currency.GOLD.symbol);
+        currencyRate.setTarget(Currency.PLN.symbol);
         currencyRate.setDate(date);
         if (currencyRepository.findCurrencyRateByBaseAndTargetAndDate(
                 currencyRate.getBase(),

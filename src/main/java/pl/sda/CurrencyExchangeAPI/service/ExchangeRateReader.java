@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.sda.CurrencyExchangeAPI.model.Currency;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
 
@@ -38,12 +39,12 @@ public class ExchangeRateReader {
     }
 
     public String createAPICallForLatestGoldRate() {
-        return apiURL + "latest?base=XAU&symbols=PLN";
+        return apiURL + "latest?base=" + Currency.GOLD.symbol + "&symbols=" + Currency.PLN.symbol;
     }
 
     //date format YYYY-MM-DD
     public String createAPICallForHistoryGoldRate(String date) {
-        return apiURL + date + "?base=XAU&symbols=PLN";
+        return apiURL + date + "?base=" + Currency.GOLD.symbol + "&symbols=" + Currency.PLN.symbol;
     }
 
     public String createAPICallForAllCurrencyMap() {

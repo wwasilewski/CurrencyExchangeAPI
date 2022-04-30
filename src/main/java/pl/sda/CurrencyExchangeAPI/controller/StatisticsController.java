@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.sda.CurrencyExchangeAPI.model.Currency;
 import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
 import pl.sda.CurrencyExchangeAPI.service.StatisticsService;
 
@@ -13,7 +14,6 @@ import pl.sda.CurrencyExchangeAPI.service.StatisticsService;
 public class StatisticsController {
 
     private final StatisticsService statisticsService;
-    private static final String GOLD_SYMBOL = "XAU";
 
     @Autowired
     public StatisticsController(StatisticsService statisticsService) {
@@ -35,7 +35,7 @@ public class StatisticsController {
 
     @GetMapping("/db-gold")
     public long getDbGoldRecordsCount() {
-        return statisticsService.getDbCountForCurrency(GOLD_SYMBOL).size();
+        return statisticsService.getDbCountForCurrency(Currency.GOLD.symbol).size();
     }
 
     @GetMapping("/currency/{base}")
