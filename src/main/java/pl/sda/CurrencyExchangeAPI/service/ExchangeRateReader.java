@@ -30,7 +30,7 @@ public class ExchangeRateReader {
     }
 
     public String createAPICallForLatestRate(String base, String symbol) {
-        return apiURL + base + "&symbols=" + symbol;
+        return apiURL + "latest?base=" + base + "&symbols=" + symbol;
     }
 
     //date format YYYY-MM-DD
