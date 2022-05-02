@@ -2,7 +2,10 @@ package pl.sda.CurrencyExchangeAPI.service;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.sda.CurrencyExchangeAPI.model.Currency;
 import pl.sda.CurrencyExchangeAPI.model.RateValue;
 import pl.sda.CurrencyExchangeAPI.model.StatisticsValue;
 
@@ -17,31 +20,40 @@ import java.net.http.HttpResponse;
 @Service
 public class ExchangeRateReader {
 
+    private final Gson gson;
+    private final String apiURL;
+
+    @Autowired
+    public ExchangeRateReader(Gson gson, @Value("${api.url}") String apiURL) {
+        this.gson = gson;
+        this.apiURL = apiURL;
+    }
+
     public String createAPICallForLatestRate(String base, String symbol) {
-        return "https://api.exchangerate.host/latest?base=" + base + "&symbols=" + symbol;
+        return apiURL + "latest?base=" + base + "&symbols=" + symbol;
     }
 
     //date format YYYY-MM-DD
     public String createAPICallForHistoryRate(String base, String symbol, String date) {
-        return "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + symbol;
+        return apiURL + date + "?base=" + base + "&symbols=" + symbol;
     }
 
     public String createAPICallForLatestGoldRate() {
-        return "https://api.exchangerate.host/latest?base=XAU&symbols=PLN";
+        return apiURL + "latest?base=" + Currency.GOLD.symbol + "&symbols=" + Currency.PLN.symbol;
     }
 
     //date format YYYY-MM-DD
     public String createAPICallForHistoryGoldRate(String date) {
-        return "https://api.exchangerate.host/" + date + "?base=XAU&symbols=PLN";
+        return apiURL + date + "?base=" + Currency.GOLD.symbol + "&symbols=" + Currency.PLN.symbol;
     }
 
     public String createAPICallForAllCurrencyMap() {
-        return "https://api.exchangerate.host/latest";
+        return apiURL + "latest";
     }
 
-    //https://api.exchangerate.host/timeseries?start_date=2020-01-01&end_date=2020-01-04&base=usd&symbols=PLN
+    //date format YYYY-MM-DD
     public String createAPICallForStatisticsForPeriod(String base, String target, String dateFrom, String dateTo) {
-        return "https://api.exchangerate.host/timeseries?start_date=" + dateFrom + "&end_date=" + dateTo + "&base=" + base + "&symbols=" + target.toUpperCase();
+        return apiURL + "timeseries?start_date=" + dateFrom + "&end_date=" + dateTo + "&base=" + base + "&symbols=" + target.toUpperCase();
     }
 
     public RateValue getLatestRates(String base, String symbol) {
@@ -128,8 +140,7 @@ public class ExchangeRateReader {
         } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
-        Gson mapper = new Gson();
-        return mapper.fromJson(response.body(), RateValue.class);
+        return gson.fromJson(response.body(), RateValue.class);
     }
 
     private StatisticsValue getStatsValue(URI uri) {
@@ -144,8 +155,7 @@ public class ExchangeRateReader {
         } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
         }
-        Gson mapper = new Gson();
-        return mapper.fromJson(response.body(), StatisticsValue.class);
+        return gson.fromJson(response.body(), StatisticsValue.class);
     }
 
     public boolean isCurrencyExisting(String base, String target) {
